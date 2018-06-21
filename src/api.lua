@@ -10,6 +10,7 @@ local responses     = require "kong.tools.responses"
 local encode_args   = ngx.encode_args
 local ceil 		    = math.ceil
 local validate      = require("lapis.validate").validate
+local singletons = require "kong.singletons"
 
 local function select_query(select_clause, consumer_id)
 	local query =fmt([[
@@ -39,7 +40,8 @@ local function get_route_ids()
     local route_ids
     for key, val in pairs(args) do
         if key == 'routes[]' then
-         	if type(val) ~= 'table' then route_ids = {tostring(val)}
+        	if type(val) == 'boolean' then return  {} end
+         	if type(val) ~= 'table'   then route_ids = {tostring(val)}
          	else route_ids = val end
 
             break
@@ -115,7 +117,9 @@ return {
     	})
 
     	if errors ~= nil then
-    		return app_helpers.yield_error(errors)
+    		return responses.send_HTTP_BAD_REQUEST {
+    			message =  errors
+    		}
     	end
 
 		local consumer_routes_dao = dao_factory.consumer_routes
@@ -158,7 +162,9 @@ return {
 		local next = next
 
 		if  next(route_ids) == nil then
-			return app_helpers.yield_error('routes parameters should\'t be empty')
+			return responses.send_HTTP_BAD_REQUEST {
+    			message =  'routes parameters should\'t be empty'
+			}
 		end
 
 		local routes= ''
@@ -176,6 +182,9 @@ return {
 		if not rows then
 		    return app_helpers.yield_error(err)
 		end
+
+    	local cache = singletons.cache
+		cache:invalidate("consumer_route."..self.params.consumer_id)
 
     	return responses.send_HTTP_NO_CONTENT()
    end
