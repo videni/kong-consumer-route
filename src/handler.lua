@@ -64,4 +64,15 @@ function ConsumerRoute:access(conf)
     end
 end
 
+function ConsumerRoute:init_worker()
+  local worker_events = singletons.worker_events
+
+  worker_events.register(function(data)
+    -- currently , Kong doen't have api to invalidate cache like this consumer-route.*,
+    -- so we have to invalidate all cache, since route deleletion seldom happen， this is not big deal
+    local cache = singletons.cache
+    cache:purge()
+  end, "crud", "routes:delete")
+end
+
 return ConsumerRoute
