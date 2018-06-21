@@ -1,7 +1,7 @@
 package = "kong-consumer-route"
 version = "1.0.1-1"
 source = {
-  url = "none",
+  url = "https://github.com/videni/kong-consumer-route.git",
   tag = "1.0.1"
 }
 description = {
