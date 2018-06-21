@@ -160,8 +160,6 @@ return {
     	if errors ~= nil then
     		return app_helpers.yield_error(errors)
     	end
-		local pretty = require('pl.pretty')
-
 		local db_connector = dao_factory.consumer_routes.db.new_db.connector;
 
 		local route_ids = get_route_ids()
