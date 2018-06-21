@@ -1,13 +1,13 @@
 package = "kong-consumer-route"
 version = "1.0.1-1"
 source = {
-  url = "https://github.com/videni/kong-consumer-route.git",
+  url = "git://github.com/videni/kong-consumer-route",
   tag = "1.0.1"
 }
 description = {
   summary = "A plugin for Kong to associate consumer and route",
-  homepage = "none",
-  license = "Apache 2.0"
+  homepage = "https://github.com/videni/kong-consumer-route",
+  license = "MIT"
 }
 dependencies = {
   "lua >= 5.1"
