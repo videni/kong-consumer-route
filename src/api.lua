@@ -51,6 +51,10 @@ local function get_route_ids()
  	return route_ids
 end
 
+local function validate_cache(consumer_id)
+	local cache = singletons.cache
+	cache:invalidate("consumer_route."..consumer_id)
+end
 return {
   ["/consumers/:username_or_id/routes"] = {
     before = function(self, dao_factory, helpers)
@@ -141,6 +145,8 @@ return {
 
 		local data = setmetatable(accepted, cjson.empty_array_mt)
 
+    	validate_cache(self.params.consumer_id)
+
     	return responses.send_HTTP_CREATED  {
     		data = data
     	}
@@ -183,8 +189,7 @@ return {
 		    return app_helpers.yield_error(err)
 		end
 
-    	local cache = singletons.cache
-		cache:invalidate("consumer_route."..self.params.consumer_id)
+    	validate_cache(self.params.consumer_id)
 
     	return responses.send_HTTP_NO_CONTENT()
    end
