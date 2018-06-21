@@ -8,7 +8,7 @@ local function get_consumer_id()
 
    ngx.log(ngx.ERR, "no consumer found: ");
 
-   return '35f9aed6-1565-47a7-9984-d59498dce685'
+   return nil
 end
 
 local function load_consumer_routes(consumer_id)

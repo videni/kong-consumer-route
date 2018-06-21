@@ -1,7 +1,8 @@
 local Errors = require "kong.dao.errors"
 
 return {
+   no_consumer = true,
    fields = {
-         none = {type = "string", default="hi"},
+         hi = {type = "string", default="hi"},
     }
 }
