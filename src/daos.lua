@@ -1,5 +1,4 @@
 local SCHEMA = {
-  primary_key = {"id"},
   table = "consumer_routes",
   fields = {
     consumer_id = {type = "id", required = true, foreign = "consumers:id"},
