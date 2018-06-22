@@ -55,6 +55,7 @@ local function validate_cache(consumer_id)
 	local cache = singletons.cache
 	cache:invalidate("consumer_route."..consumer_id)
 end
+
 return {
   ["/consumers/:username_or_id/routes"] = {
     before = function(self, dao_factory, helpers)

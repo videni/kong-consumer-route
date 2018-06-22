@@ -1,0 +1,97 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "Kong consuer route API"
+basePath: "/"
+schemes:
+- "https"
+- "http"
+
+paths:
+  /consumers/{user_name_or_id}/routes:
+    get:
+      summary: "获取该consumer的关联的路由"
+      operationId: "get_routes"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "user_name_or_id"
+        required: true
+        description: "consumer user name or id"
+      - in: "query"
+        name: "page"
+        required: false
+        description: "页码"
+      - in: "query"
+        name: "size"
+        required: false
+        description: "页大小"
+      responses:
+        200:
+          description: "成功"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Route"
+        400:
+          description: "参数错误"
+    post:
+      summary: "批量关联route到consumer"
+      description: ""
+      operationId: "batch_add"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "user_name_or_id"
+        required: true
+        description: "consumer user name or id"
+      - in: "formData"  
+        name: "routes"
+        type: "array"
+        items:
+          type: "string"
+      responses:
+        400:
+          description: "参数错误"
+        404:
+          description: "consumer未找到"
+        204:
+          description: "成功"
+    delete:
+      summary: "批量解除consuer与route关系"
+      description: ""
+      operationId: "batch_delete"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "user_name_or_id"
+        required: true
+        description: "consumer user name or id"
+      - in: "formData"  
+        name: "routes"
+        type: "array"
+        items:
+          type: "string"  
+      responses:
+        400:
+          description: "参数错误"
+        404:
+          description: "consumer未找到"
+        204:
+          description: "成功"
+definitions:
+  Route:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      created_at:
+        type: "string"
+        format: "date-time"
