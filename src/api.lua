@@ -151,9 +151,10 @@ return {
     	return responses.send_HTTP_CREATED  {
     		data = data
     	}
-	end,
-
-	DELETE = function(self, dao_factory)
+	end
+  },
+  ["/consumers/:username_or_id/routes/delete"] => {
+	POST = function(self, dao_factory)
   		local errors = validate(self.params, {
     		{'routes', exists = true}
     	})
@@ -190,7 +191,7 @@ return {
 
     	validate_cache(self.params.consumer_id)
 
-    	return responses.send_HTTP_NO_CONTENT()
-   end
+    	return responses.send_HTTP_OK()
+   	end
   }
 }

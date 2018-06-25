@@ -49,7 +49,7 @@ paths:
         name: "user_name_or_id"
         required: true
         description: "consumer user name or id"
-      - in: "formData"  
+      - in: "formData"
         name: "routes"
         type: "array"
         items:
