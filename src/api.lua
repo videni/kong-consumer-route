@@ -37,14 +37,14 @@ local function get_route_ids()
 	ngx.req.read_body()
     local args, err = ngx.req.get_post_args()
 	if not args then  return nil  end
-    local route_ids
-    for key, val in pairs(args) do
-        if key == 'routes[]' then
-        	if type(val) == 'boolean' then return  {} end
-         	if type(val) ~= 'table'   then route_ids = {tostring(val)}
-         	else route_ids = val end
+    local route_ids = {}
 
-            break
+    for key, val in pairs(args) do
+        if string.match(key, '^routes') then
+        	if type(val) == 'boolean' then return  {} end
+         	if type(val) == 'string'
+         		then table.insert(route_ids, tostring(val))
+         	else route_ids = val end
         end
  	end
 
@@ -130,7 +130,7 @@ return {
 		local consumer_routes_dao = dao_factory.consumer_routes
 
 		local route_ids = get_route_ids()
-
+ 
 		local accepted = {}
     	for i, route_id in ipairs(route_ids) do
 			local row = {
@@ -153,7 +153,7 @@ return {
     	}
 	end
   },
-  ["/consumers/:username_or_id/routes/delete"] => {
+  ["/consumers/:username_or_id/routes/delete"] = {
 	POST = function(self, dao_factory)
   		local errors = validate(self.params, {
     		{'routes', exists = true}
