@@ -154,6 +154,10 @@ return {
 	end
   },
   ["/consumers/:username_or_id/routes/delete"] = {
+    before = function(self, dao_factory, helpers)
+	    crud.find_consumer_by_username_or_id(self, dao_factory, helpers)
+	    self.params.consumer_id = self.consumer.id
+    end,
 	POST = function(self, dao_factory)
   		local errors = validate(self.params, {
     		{'routes', exists = true}
@@ -173,19 +177,19 @@ return {
 			}
 		end
 
-		local routes= ''
+		local routes = {}
     	for i, route_id in ipairs(route_ids) do
-    		routes = routes.."'"..route_id.."'"
+    		table.insert(routes, "'"..route_id.."'")
 		end
 
 		local query =fmt([[
 		DELETE FROM consumer_routes
 		WHERE  consumer_id = '%s' AND route_id IN (%s)
-		]], self.params.consumer_id, routes)
+		]], self.params.consumer_id, table.concat(routes, ','))
 
 		local rows, err, partial, num_queries = db_connector:query(query)
 
-		if not rows then
+		if  not rows then
 		    return app_helpers.yield_error(err)
 		end
 
